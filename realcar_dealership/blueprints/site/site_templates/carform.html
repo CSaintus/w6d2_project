@@ -1,0 +1,25 @@
+<form action="" method="post" class="row g-3">
+    {{ form.hidden_tag() }}
+    <div class="col-12">
+        {{ form.name.label }}
+        {{ form.name(class="form-control mt-2", placeholder='Mercedes G5') }}
+        {% for error in form.name.errors %}
+            <span class="text-danger">{{ error }}</span>
+        {% endfor %}
+    </div>
+    <div class="col-12">
+        {{ form.price.label }}
+        {{ form.price(class="form-control mt-2", placeholder='V12 biturbo') }}
+    </div>
+    <div class="col-12">
+        {{ form.description.label }}
+        {{ form.description(class="form-control mt-2", placeholder='Mercedes G5') }}
+    </div>
+    <div class="col-12">
+        {{ form.image.label }}
+        {{ form.image(class="form-control mt-2", placeholder='Mercedes G5') }}
+    </div>
+    <div class="col-12">
+        {{ form.submit(class="btn btn-primary mt-2") }}
+    </div>
+</form>
