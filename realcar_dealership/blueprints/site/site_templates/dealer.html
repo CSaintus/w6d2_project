@@ -19,9 +19,9 @@
     </div>
     {% if current_user.is_authenticated %}
     <div class="row bg-dark  p-3 dealer-stats">
-        <div class="col d-flex justify-content-center">Total # of customers: 0</div>
-        <div class="col d-flex justify-content-center">Total Sales: $0</div>
-        <div class="col d-flex justify-content-center">Total # of Cars: 0</div>
+        <div class="col d-flex justify-content-center">Total # of customers: {{ stats.customers}}</div>
+        <div class="col d-flex justify-content-center">Total Sales: ${{ stats.sales}}</div>
+        <div class="col d-flex justify-content-center">Total # of Cars: {{stats.cars}}</div>
     </div>
     {% for car in cars %}
     <div class="row mt-5 mb-5 justify-content-center car-card">

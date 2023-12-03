@@ -2,7 +2,7 @@ from flask import Blueprint, render_template
 
 
 
-from realcar_dealership.models import Car, db
+from realcar_dealership.models import Car, db, customer, order
 from realcar_dealership.forms import carform
 
 
@@ -14,9 +14,23 @@ def dealer():
 
 
     allcars = Car.query.all()
+    allcustomers = customer.query.all()
+    allorders = order.query.all()
 
 
-    return render_template('dealer.html', cars=allcars)
+    car_stats = {
+        'cars': len(allcars),
+        'sales': sum([order.order_total for order in allorders]),
+        'customers': len(allcustomers),
+    }
+
+    
+
+
+    our_cars = []
+
+
+    return render_template('dealer.html', cars=allcars=our_cars, car_stats=car_stats)
 
 
 @site.route("/addcar", methods=["GET", "POST"])

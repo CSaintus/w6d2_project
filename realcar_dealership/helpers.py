@@ -25,5 +25,21 @@ def get_image_url(search):
     if item in data.keys():
         img_url = data[item][0]['originalImageUrl']
 
+
+    
+    print(img_url)
     return img_url
+
+
+
+class JSONEncoder(json.JSONEncoder):
+    def default(self, obj):
+        if isinstance(obj, datetime.datetime):
+            return obj.isoformat()
+        elif isinstance(obj, datetime.date):
+            return obj.isoformat()
+        elif isinstance(obj, decimal.Decimal):
+            return float(obj)
+        else:
+            return super(JSONEncoder, self).default(obj)
 

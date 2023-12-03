@@ -114,6 +114,91 @@ class Car(db.Model):
         return f"<Car: {self.make} {self.model}>"
 
 
+class customer(db.Model):
+    """Customer model."""
+    customer_id = db.Column(db.Integer, primary_key=True)
+    date_added = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+    carorder_id = db.relationship('Carorder', backref=db.backref('customer', lazy=True))
+
+    def __init__(self, customer_id):
+        self.customer_id = customer_id
+        self.date_added = datetime.utcnow()
+
+    def __repr__(self):
+        return f"<Customer: {self.customer_id}>"
+
+
+
+
+class Carorder(db.Model):
+    """Carorder model."""
+    carorder_id = db.Column(db.Integer, primary_key=True)
+    car_id = db.Column(db.Integer, db.ForeignKey('car.car_id'), nullable=False)
+    customer_id = db.Column(db.Integer, db.ForeignKey('customer.customer_id'), nullable=False)
+    date_added = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+    date_modified = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+    quantity = db.Column(db.Integer, nullable=False, default=1)
+    car = db.relationship('Car', backref=db.backref('carorder', lazy=True))
+    customer = db.relationship('customer', backref=db.backref('carorder', lazy=True))
+
+
+    def __init__(self, car_id, customer_id, quantity, price, date_added, date_modified):
+        self.car_id = car_id
+        self.customer_id = customer_id
+        self.quantity = quantity
+        self.price = price
+        self.date_added = date_added
+        self.date_modified = date_modified
+        self.carorder_id = self.set_id()
+
+
+    def set_id(self):
+        return str(uuid.uuid4())
+
+    def set_price(self, quantity, price):
+
+        quantity = int(quantity)
+        price = float(price)
+
+        self.price = quantity * price
+        return self.price
+
+    def update_quantity(self, quantity):
+        self.quantity = quantity
+        return self.quantity
+
+
+    class Order(db.Model):
+        order_id = db.Column(db.Integer, primary_key=True)
+        order_total = db.Column(db.Integer, nullable=False)
+        date_added = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+        carorder_id = db.relationship('Carorder', backref=db.backref('order', lazy=True))
+
+
+        def __init__(self, order_total, date_added, carorder_id):
+            self.order_total = order_total
+            self.date_added = date_added
+            self.carorder_id = carorder_id
+            self.order_id = self.set_id()
+
+        def set_id(self):
+            return str(uuid.uuid4())
+
+
+        def increment_order_total(self, order_total):
+
+            self.order_total += float(order_total)
+            return self.order_total
+
+
+        def decrement_order_total(self, order_total):
+            self.order_total -= float(order_total)
+            return self.order_total
+
+
+        def __repr__(self):
+            return f"<Order: {self.order_id}>"
+
 
 class CarSchema(ma.Schema):
     """Marshmallow schema for Car."""
