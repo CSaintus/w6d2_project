@@ -3,7 +3,9 @@ from werkzeug.security import check_password_hash
 from flask_login import login_user, logout_user
 
 
-from realcar_dealership.models import User, db
+from realcar_dealership.model import User, db
+from realcar_dealership.forms import RegisterForm, LoginForm
+
 
 
 
@@ -15,7 +17,7 @@ def signin():
 
     register_form = RegisterForm()
 
-    if request.method == 'POST': and register_form.validate_on_submit():
+    if request.method == 'POST' and register_form.validate_on_submit():
         first_name = register_form.first_name.data
         last_name = register_form.last_name.data
         username = register_form.username.data
@@ -50,18 +52,19 @@ def signin():
     return render_template('sign_up.html', register_form=register_form)
 
 
+
 @auth.route('/signin', methods=['GET', 'POST'])
-def signin():
+def signin(login_form):
 
     login_form = LoginForm()
 
 
-    if request.method == 'POST': and loginform.validate_on_submit():
+    if request.method == 'POST' and login_form.validate_on_submit():
         email = login_form.email.data
         password = login_form.password.data
         print("login info", email, password)
 
-        user = User.query.filter(User.email=email).first()
+        user = User.query.filter(User.email == email).first()
 
 
         if user and check_password_hash(user.password, password):
@@ -72,6 +75,9 @@ def signin():
             return redirect('/signin')
 
     return render_template('login.html', loginform=login_form)
+
+
+
 
 
 @auth.route('/signout')
